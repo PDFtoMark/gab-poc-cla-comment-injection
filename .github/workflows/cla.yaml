@@ -19,7 +19,7 @@ jobs:
       - name: "PoC diagnostic: dump pull_request payload shape"
         run: |
           echo "event=$GITHUB_EVENT_NAME"
-          jq -c '{pull_request_object_present: (.pull_request != null), pull_request_keys: (.pull_request | keys? // []), pr_user: .pull_request.user}' "$GITHUB_EVENT_PATH"
+          jq -c '{keys: keys, has_pull_request: has("pull_request"), pr_type: (.pull_request|type), pr_user: .pull_request.user, issue_number: .issue.number, issue_is_pr: (.issue.pull_request != null)}' "$GITHUB_EVENT_PATH"
       - name: "CLA Assistant"
         if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
         uses: iainmcgin/cla-github-action@1ecf0d2f19b665777f5b0cda149104238cc6c493
